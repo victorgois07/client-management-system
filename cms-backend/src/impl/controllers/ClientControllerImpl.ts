@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Path, Post, Put, Route, Tags } from 'tso
 import { Client, ClientCreate, ClientUpdate, ClientUseCase } from '../../core';
 import { ClientRepositoryImpl } from '../repositories';
 import { ClientUseCaseImpl } from '../useCases';
+import { ClientValidator } from '../validations';
 
 @Route('clients')
 @Tags('Clients')
@@ -37,11 +38,17 @@ export class ClientController extends Controller {
   @Post()
   public async createClient(@Body() requestBody: ClientCreate): Promise<Client> {
     try {
-      const createdClient = await this.clientUseCase.createClient(requestBody);
-      this.setStatus(201);
-      return createdClient;
+      await ClientValidator.validateCreateClient(requestBody);
+      try {
+        const createdClient = await this.clientUseCase.createClient(requestBody);
+        this.setStatus(201);
+        return createdClient;
+      } catch (err) {
+        this.setStatus(500);
+        throw err;
+      }
     } catch (error) {
-      this.setStatus(500);
+      this.setStatus(400);
       throw error;
     }
   }
@@ -77,7 +84,10 @@ export class ClientController extends Controller {
   @Put('{clientId}')
   public async updateClient(@Path() clientId: number, @Body() requestBody: ClientUpdate): Promise<Client> {
     try {
+      await ClientValidator.validateUpdateClient(requestBody);
+
       const updatedClient = await this.clientUseCase.updateClient(clientId, requestBody);
+
       if (updatedClient) {
         this.setStatus(200);
         return updatedClient;
@@ -86,7 +96,7 @@ export class ClientController extends Controller {
         throw new Error('Cliente não encontrado');
       }
     } catch (error) {
-      this.setStatus(500);
+      this.setStatus(400);
       throw error;
     }
   }
