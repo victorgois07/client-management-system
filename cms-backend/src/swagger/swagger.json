@@ -1,0 +1,261 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"Client": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"phone": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"email",
+					"phone"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Pick_Client.Exclude_keyofClient.id__": {
+				"properties": {
+					"name": {},
+					"email": {},
+					"phone": {}
+				},
+				"required": [
+					"name",
+					"email",
+					"phone"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit_Client.id_": {
+				"$ref": "#/components/schemas/Pick_Client.Exclude_keyofClient.id__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"ClientCreate": {
+				"$ref": "#/components/schemas/Omit_Client.id_"
+			},
+			"Partial_ClientCreate_": {
+				"properties": {
+					"name": {},
+					"email": {},
+					"phone": {}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"ClientUpdate": {
+				"$ref": "#/components/schemas/Partial_ClientCreate_"
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "cms-backend",
+		"version": "1.0.0",
+		"description": "Backend para o sistema de gerenciamento de clientes da Facilita Jurídico.",
+		"license": {
+			"name": "MIT"
+		},
+		"contact": {
+			"name": "Victor Gois Vieira"
+		}
+	},
+	"paths": {
+		"/clients": {
+			"get": {
+				"operationId": "ListClients",
+				"responses": {
+					"200": {
+						"description": "Lista de clientes.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Client"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Listar todos os clientes.",
+				"tags": [
+					"Clients"
+				],
+				"security": [],
+				"parameters": []
+			},
+			"post": {
+				"operationId": "CreateClient",
+				"responses": {
+					"200": {
+						"description": "O cliente criado.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Client"
+								}
+							}
+						}
+					}
+				},
+				"description": "Criar um novo cliente.",
+				"tags": [
+					"Clients"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "- Dados do cliente a ser criado.",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ClientCreate",
+								"description": "- Dados do cliente a ser criado."
+							}
+						}
+					}
+				}
+			}
+		},
+		"/clients/{clientId}": {
+			"get": {
+				"operationId": "GetClient",
+				"responses": {
+					"200": {
+						"description": "Detalhes do cliente.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Client"
+								}
+							}
+						}
+					}
+				},
+				"description": "Obter detalhes de um cliente pelo ID.",
+				"tags": [
+					"Clients"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "- ID do cliente a ser obtido.",
+						"in": "path",
+						"name": "clientId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateClient",
+				"responses": {
+					"200": {
+						"description": "O cliente atualizado.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Client"
+								}
+							}
+						}
+					}
+				},
+				"description": "Atualizar um cliente existente.",
+				"tags": [
+					"Clients"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "- ID do cliente a ser atualizado.",
+						"in": "path",
+						"name": "clientId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "- Novos dados do cliente.",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ClientUpdate",
+								"description": "- Novos dados do cliente."
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteClient",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Excluir um cliente pelo ID.",
+				"tags": [
+					"Clients"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "- ID do cliente a ser excluído.",
+						"in": "path",
+						"name": "clientId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	],
+	"tags": [
+		{
+			"name": "Clients",
+			"description": "Operations about clients",
+			"externalDocs": {
+				"description": "Find out more about clients",
+				"url": "http://swagger.io"
+			}
+		}
+	]
+}
