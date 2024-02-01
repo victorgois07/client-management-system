@@ -21,6 +21,14 @@
 					},
 					"phone": {
 						"type": "string"
+					},
+					"latitude": {
+						"type": "number",
+						"format": "double"
+					},
+					"longitude": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
@@ -36,7 +44,9 @@
 				"properties": {
 					"name": {},
 					"email": {},
-					"phone": {}
+					"phone": {},
+					"latitude": {},
+					"longitude": {}
 				},
 				"required": [
 					"name",
@@ -57,13 +67,66 @@
 				"properties": {
 					"name": {},
 					"email": {},
-					"phone": {}
+					"phone": {},
+					"latitude": {},
+					"longitude": {}
 				},
 				"type": "object",
 				"description": "Make all properties in T optional"
 			},
 			"ClientUpdate": {
 				"$ref": "#/components/schemas/Partial_ClientCreate_"
+			},
+			"GetAutocompletePlaces": {
+				"properties": {
+					"lng": {
+						"type": "number",
+						"format": "double"
+					},
+					"lat": {
+						"type": "number",
+						"format": "double"
+					},
+					"id": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"lng",
+					"lat",
+					"id",
+					"description",
+					"name"
+				],
+				"type": "object"
+			},
+			"CalcRoutesReponse": {
+				"properties": {
+					"lng": {
+						"type": "number",
+						"format": "double"
+					},
+					"lat": {
+						"type": "number",
+						"format": "double"
+					},
+					"clientId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"lng",
+					"lat",
+					"clientId"
+				],
+				"type": "object"
 			}
 		},
 		"securitySchemes": {}
@@ -103,7 +166,50 @@
 					"Clients"
 				],
 				"security": [],
-				"parameters": []
+				"parameters": [
+					{
+						"in": "query",
+						"name": "name",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "email",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "phone",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "latitude",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "longitude",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			},
 			"post": {
 				"operationId": "CreateClient",
@@ -240,6 +346,89 @@
 						}
 					}
 				]
+			}
+		},
+		"/google-maps/get-autocomplete-places": {
+			"get": {
+				"operationId": "GetAutocomplete",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/GetAutocompletePlaces"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Google-maps"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "input",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/google-maps/post-calc-routes": {
+			"post": {
+				"operationId": "CalcRoutes",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/CalcRoutesReponse"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Google-maps"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"lng": {
+										"type": "number",
+										"format": "double"
+									},
+									"lat": {
+										"type": "number",
+										"format": "double"
+									}
+								},
+								"required": [
+									"lng",
+									"lat"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
 			}
 		}
 	},

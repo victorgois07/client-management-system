@@ -36,16 +36,16 @@ app.use(
   expressWinston.logger({
     winstonInstance: logger,
     msg: 'HTTP {{req.method}} {{req.url}}',
-  })
+  }),
 );
 
 app.use(
   expressWinston.errorLogger({
     winstonInstance: logger,
-  })
+  }),
 );
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 app.use(errorHandler);
 

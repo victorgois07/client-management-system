@@ -3,8 +3,8 @@ import { Client, ClientRepository, ClientUseCase } from "../../core";
 export class ClientUseCaseImpl implements ClientUseCase {
   constructor(private readonly clientRepository: ClientRepository) {}
 
-  async listClients(): Promise<Client[]> {
-    return await this.clientRepository.findAll();
+  async listClientsWithFilters(filters: Partial<Client>): Promise<Client[]> {
+    return await this.clientRepository.findByFilters(filters);
   }
 
   async getClientById(clientId: number): Promise<Client | null> {

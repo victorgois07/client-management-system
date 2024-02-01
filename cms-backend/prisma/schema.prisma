@@ -12,4 +12,6 @@ model Client {
   name  String
   email String @unique
   phone String
+  latitude  Float?
+  longitude Float?
 }

@@ -5,7 +5,7 @@
   "spec": {
     "outputDirectory": "./src/swagger",
     "specVersion": 3,
-    "tags":  [
+    "tags": [
       {
         "name": "Clients",
         "description": "Operations about clients",
@@ -18,5 +18,8 @@
   },
   "routes": {
     "routesDir": "./src/routes"
+  },
+  "compilerOptions": {
+    "baseUrl": "."
   }
 }

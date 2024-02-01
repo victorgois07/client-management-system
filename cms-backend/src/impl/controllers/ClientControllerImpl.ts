@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Path, Post, Put, Route, Tags } from 'tsoa';
+import { Body, Controller, Delete, Get, Path, Post, Put, Query, Route, Tags } from 'tsoa';
 import { Client, ClientCreate, ClientUpdate, ClientUseCase } from '../../core';
 import { ClientRepositoryImpl } from '../repositories';
 import { ClientUseCaseImpl } from '../useCases';
@@ -19,9 +19,23 @@ export class ClientController extends Controller {
    * @returns Lista de clientes.
    */
   @Get()
-  public async listClients(): Promise<Client[]> {
+  public async listClients(
+    @Query() name?: string,
+    @Query() email?: string,
+    @Query() phone?: string,
+    @Query() latitude?: number,
+    @Query() longitude?: number,
+  ): Promise<Client[]> {
     try {
-      const clients = await this.clientUseCase.listClients();
+      const clients = await this.clientUseCase.listClientsWithFilters(
+        {
+          name,
+          email,
+          phone,
+          latitude,
+          longitude,
+        } ?? {},
+      );
       this.setStatus(200);
       return clients;
     } catch (error) {
